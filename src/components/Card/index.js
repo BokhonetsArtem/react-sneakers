@@ -1,7 +1,7 @@
 import styles from "./Card.module.scss";
 import { useState } from "react";
 
-export default function Card({ name, price, imageUrl }) {
+export default function Card({ name, price, imageUrl, onPlus }) {
   const [isAdded, setIsAdded] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
 
@@ -11,6 +11,7 @@ export default function Card({ name, price, imageUrl }) {
 
   const onClickPlus = () => {
     setIsAdded(!isAdded);
+    onPlus({ name, price, imageUrl }, isAdded);
   };
 
   return (
