@@ -2,11 +2,30 @@ import Card from "../components/Card";
 
 export default function Home({
   items,
+  cartItems,
   searchValue,
   setSearchValue,
   onChangeSearchInput,
   onAddToCart,
+  isLoading,
 }) {
+  const renderItems = () => {
+    const filteredItems = items.filter((item) =>
+      item.name.toLowerCase().includes(searchValue.toLowerCase())
+    );
+
+    return (isLoading ? [...Array(12)] : filteredItems).map((item, index) => {
+      return (
+        <Card
+          key={index}
+          onPlus={(item) => onAddToCart(item)}
+          {...item}
+          loading={isLoading}
+        />
+      );
+    });
+  };
+
   return (
     <div className="content p-40">
       <div className="d-flex align-center justify-between mb-40">
@@ -31,23 +50,7 @@ export default function Home({
         </div>
       </div>
 
-      <div className="cards d-flex flex-wrap">
-        {items
-          .filter((item) =>
-            item.name.toLowerCase().includes(searchValue.toLowerCase())
-          )
-          .map((item, index) => {
-            return (
-              <Card
-                key={index}
-                price={item.price}
-                name={item.name}
-                imageUrl={item.imageUrl}
-                onPlus={onAddToCart}
-              />
-            );
-          })}
-      </div>
+      <div className="cards d-flex flex-wrap">{renderItems()}</div>
     </div>
   );
 }

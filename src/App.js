@@ -11,42 +11,34 @@ function App() {
   const [cartItems, setCartItems] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [cartOpened, setCartOpened] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get("https://6910205145e65ab24ac5ab45.mockapi.io/items")
-      .then((res) => setItems(res.data))
-      .catch((err) => {
-        console.log("Ошибка получения данных");
-        alert("Ошибка получения данных");
-      });
+    async function fetchData() {
+      setIsLoading(true);
+      const itemsResponse = await axios.get(
+        "https://6910205145e65ab24ac5ab45.mockapi.io/items"
+      );
 
-    axios
-      .get("https://6910205145e65ab24ac5ab45.mockapi.io/cart")
-      .then((res) => setCartItems(res.data))
-      .catch((err) => {
-        console.log("Ошибка получения данных");
-        alert("Ошибка получения данных");
-      });
+      setIsLoading(false);
+
+      setItems(itemsResponse.data);
+    }
+
+    fetchData();
   }, []);
 
-  const onAddToCart = (obj, isAdded) => {
-    if (isAdded) {
-      setCartItems((prev) => {
-        return prev.filter((product) => {
-          return product.name !== obj.name;
-        });
-      });
+  const onAddToCart = (obj) => {
+    if (cartItems.find((cartItem) => cartItem.itemId == obj.itemId)) {
+      setCartItems((prev) =>
+        prev.filter((cartItem) => cartItem.itemId != obj.itemId)
+      );
     } else {
-      axios.post("https://6910205145e65ab24ac5ab45.mockapi.io/cart", obj);
-      setCartItems((prev) => {
-        return [...prev, obj];
-      });
+      setCartItems((prev) => [...prev, obj]);
     }
   };
 
   const onRemoveItem = (id) => {
-    axios.delete(`https://6910205145e65ab24ac5ab45.mockapi.io/cart/${id}`);
     setCartItems((prev) => {
       return prev.filter((item) => item.id !== id);
     });
@@ -77,6 +69,7 @@ function App() {
               setSearchValue={setSearchValue}
               onChangeSearchInput={onChangeSearchInput}
               onAddToCart={onAddToCart}
+              isLoading={isLoading}
             />
           }
         ></Route>
