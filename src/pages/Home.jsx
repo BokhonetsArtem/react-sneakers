@@ -6,7 +6,6 @@ export default function Home({
   searchValue,
   setSearchValue,
   onChangeSearchInput,
-  onAddToCart,
   isLoading,
 }) {
   const renderItems = () => {
@@ -14,12 +13,13 @@ export default function Home({
       item.name.toLowerCase().includes(searchValue.toLowerCase())
     );
 
-    return (isLoading ? [...Array(12)] : filteredItems).map((item, index) => {
+    return (isLoading ? [...Array(8)] : filteredItems).map((item, index) => {
       return (
         <Card
-          key={index}
-          onPlus={(item) => onAddToCart(item)}
-          {...item}
+          key={isLoading ? index : item.name}
+          name={item?.name}
+          price={item?.price}
+          imageUrl={item?.imageUrl}
           loading={isLoading}
         />
       );

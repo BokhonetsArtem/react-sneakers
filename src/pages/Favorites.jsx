@@ -5,7 +5,7 @@ export default function Favorites() {
         <h1>Мои закладки</h1>
       </div>
 
-      <div className="cards d-flex flex-wrap">Тут будут мои закладки</div>
+      <div className="cards d-flex flex-wrap"></div>
     </div>
   );
 }

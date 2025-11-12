@@ -5,7 +5,7 @@ export default function Header({ onClickCart }) {
     <header className="d-flex justify-between align-center p-40">
       <Link to="/">
         <div className="d-flex align-center">
-          <img width={40} height={40} src="/img/logo.png" />
+          <img width={40} height={40} src="/img/logo.png" alt="Logo" />
 
           <div>
             <h3 className="text-uppercase">React Sneakers</h3>
