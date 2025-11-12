@@ -5,6 +5,7 @@ import axios from "axios";
 import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Favorites from "./pages/Favorites";
+import Orders from "./pages/Orders";
 import { AppContext } from "./AppContext";
 
 function App() {
@@ -16,14 +17,19 @@ function App() {
 
   useEffect(() => {
     async function fetchData() {
-      setIsLoading(true);
-      const itemsResponse = await axios.get(
-        "https://6910205145e65ab24ac5ab45.mockapi.io/items"
-      );
+      try {
+        setIsLoading(true);
+        const itemsResponse = await axios.get(
+          "https://6910205145e65ab24ac5ab45.mockapi.io/items"
+        );
 
-      setIsLoading(false);
+        setIsLoading(false);
 
-      setItems(itemsResponse.data);
+        setItems(itemsResponse.data);
+      } catch (error) {
+        console.log("Произошла ошибка при получении данных");
+        alert("Произошла ошибка при получении данных");
+      }
     }
 
     fetchData();
@@ -65,13 +71,14 @@ function App() {
       }}
     >
       <div className="wrapper clear">
-        {cartOpened && (
+        <div>
           <Drawer
             onRemove={onRemoveItem}
             items={cartItems}
             onClose={() => setCartOpened(false)}
+            opened={cartOpened}
           />
-        )}
+        </div>
         <Header onClickCart={() => setCartOpened(true)} />
 
         <Routes>
@@ -89,6 +96,7 @@ function App() {
           ></Route>
 
           <Route path="/favorites" element={<Favorites />} exact></Route>
+          <Route path="/orders" element={<Orders />} exact></Route>
         </Routes>
       </div>
     </AppContext.Provider>

@@ -1,11 +1,12 @@
-import { AppContext } from "../AppContext";
-import Info from "./Info";
-import { useState, useContext } from "react";
+import Info from "../Info";
+import { useState } from "react";
+import { useCart } from "../../hooks/useCart";
+import styles from "./Drawer.module.scss";
 
-export default function Drawer({ items = [], onClose, onRemove }) {
+export default function Drawer({ items = [], onClose, onRemove, opened }) {
+  const { cartItems, setCartItems, totalPrice } = useCart();
   const [isOrderComplete, setIsOrderComplete] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { setCartItems } = useContext(AppContext);
 
   const onClickOrder = () => {
     setIsLoading(true);
@@ -14,8 +15,8 @@ export default function Drawer({ items = [], onClose, onRemove }) {
   };
 
   return (
-    <div className="overlay">
-      <div className="drawer">
+    <div className={`${styles.overlay} ${opened ? styles.overlayVisible : ""}`}>
+      <div className={styles.drawer}>
         <h2 className="d-flex justify-between mb-30">
           Корзина
           <img
@@ -28,7 +29,7 @@ export default function Drawer({ items = [], onClose, onRemove }) {
 
         {items.length > 0 ? (
           <div className="d-flex flex-column flex">
-            <div className="items">
+            <div className={styles.items}>
               {items.map((item) => {
                 return (
                   <div
@@ -58,12 +59,12 @@ export default function Drawer({ items = [], onClose, onRemove }) {
                 <li>
                   <span>Итого:</span>
                   <div></div>
-                  <b>21 498 руб.</b>
+                  <b>{totalPrice} руб.</b>
                 </li>
                 <li>
                   <span>Налог 5%:</span>
                   <div></div>
-                  <b>1064 руб.</b>
+                  <b>{Math.ceil(totalPrice * 0.05)} руб.</b>
                 </li>
               </ul>
               <button
